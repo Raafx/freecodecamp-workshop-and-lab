@@ -1,0 +1,36 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: 0px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+:root {
+    --white-blue: aliceblue;
+    --border-color: rgb(51, 74, 114);
+    --backgground-color: rgb(179, 189, 219);
+}
+
+body {
+    background-color: var(--backgground-color);
+}
+
+textarea#text-input {
+    background-color: var(--white-blue);
+    border: 2px var(--border-color) solid;
+    padding: 5px;
+    resize: none;
+    font-size: 14px;
+    width: 300px;
+    height: 150px;
+    
+}

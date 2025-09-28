@@ -1,0 +1,21 @@
+.item-list {
+    list-style-type: none;
+}
+
+.item-list li {
+    display: flex;
+    gap: 10px;
+}
+
+.favorite-icon {
+    background-color: transparent;
+    border: 0px;
+    height: 25px;
+    margin-block: auto;
+    transform: scale(1.5,1.5);
+    
+}
+
+.filled {
+    color: rgb(168, 23, 23);
+}

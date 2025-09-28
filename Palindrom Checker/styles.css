@@ -1,0 +1,87 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+:root {
+    --yellow: rgb(195, 163, 61);
+    --dark-yellow: rgb(125, 75, 9);
+    --dark-green: rgb(17, 88, 17);
+    --dark-blue: rgb(9, 31, 86);
+}
+
+body {
+    background-color: var(--yellow);
+}
+
+.input-and-button {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 10px;
+    justify-content: center;
+}
+
+.form-checker {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: aliceblue;
+    padding: 40px 60px;
+    box-shadow: 5px 5px 0px var(--dark-yellow);
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+input#text-input {
+    width: 100%;
+    font-size: 16px;
+    padding: 5px;
+    text-align: center;
+    border: 0 0 0 5px blue solid;
+}
+
+button#check-btn {
+    margin-block: auto;
+    
+    background-color: var(--dark-yellow);
+    padding: 10px 30px;
+    font-size: 16px;
+    color: aliceblue;
+    border: 0px;
+    transition: transform 0.2s;
+}
+
+button#check-btn:hover {
+    transform: scale(1.05,1.05);
+}
+button#check-btn:active {
+    transform: scale(0.9,0.9);
+    background-color: black ;
+}
+
+.form-checker label {
+    font-size: 18px;
+    color: var(--dark-green);
+    font-weight: bold;
+}
+
+div#result {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 15px;
+}
+
+span#word {
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    color: var(--dark-blue);
+}

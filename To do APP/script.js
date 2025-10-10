@@ -10,8 +10,20 @@ const titleInput = document.getElementById("title-input");
 const dateInput = document.getElementById("date-input");
 const descriptionInput = document.getElementById("description-input");
 
-const taskData = [];
+const taskData = JSON.parse(localStorage.getItem("data")) || []
 let currentTask = {};
+
+
+
+const removeSpecialChars = (str) => {
+  
+  return str.replace("'","").replace('"','').replace("_","")
+
+}
+
+
+let teks = '"Ahmad"_'
+console.log(removeSpecialChars(teks))
 
 openTaskFormBtn.addEventListener("click", () =>
   taskForm.classList.toggle("hidden")
@@ -39,7 +51,15 @@ discardBtn.addEventListener("click", () => {
   reset()
 });
 
+
+
+
+
 const addOrUpdateTask = () => {
+  if(!titleInput.value.trim()){
+    alert("Please provide a title")
+    return
+  }
   const dataArrIndex = taskData.findIndex((item) => item.id === currentTask.id);
 
   const taskObj = {
@@ -55,8 +75,11 @@ const addOrUpdateTask = () => {
     taskData[dataArrIndex] = taskObj
   }
 
+  localStorage.setItem("data",JSON.stringify(taskData))
+
   updateTaskContainer()
   reset()
+  
 }
 
 const updateTaskContainer = () => {
@@ -88,6 +111,8 @@ const deleteTask = (buttonEl) => {
   buttonEl.parentElement.remove()
   taskData.splice(dataArrIndex,1)
 
+  localStorage.setItem("data",JSON.stringify(taskData))
+
   
   
 }
@@ -111,5 +136,9 @@ const reset = () => {
     descriptionInput.value = ""
     taskForm.classList.toggle("hidden")
     currentTask = {}
+    addOrUpdateTaskBtn.innerText = "Add Task"
 }
 
+if(taskData.length){
+  updateTaskContainer()
+}

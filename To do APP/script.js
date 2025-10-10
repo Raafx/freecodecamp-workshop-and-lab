@@ -17,7 +17,7 @@ let currentTask = {};
 
 const removeSpecialChars = (str) => {
   
-  return str.replace("'","").replace('"','').replace("_","")
+  return str.replaceAll("'","").replaceAll('"','').replaceAll("_","")
 
 }
 
@@ -63,7 +63,7 @@ const addOrUpdateTask = () => {
   const dataArrIndex = taskData.findIndex((item) => item.id === currentTask.id);
 
   const taskObj = {
-    id: `${titleInput.value.toLowerCase().split(" ").join("-")}-${Date.now()}`,
+    id: removeSpecialChars(`${removeSpecialChars(titleInput.value).toLowerCase().split(" ").join("-")}-${Date.now()}`),
     title: titleInput.value,
     date: dateInput.value,
     description: descriptionInput.value,

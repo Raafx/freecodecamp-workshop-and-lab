@@ -5,6 +5,10 @@ const closeFormBtn = document.getElementById("close-form-button")
 const addBookmarkBtnForm = document.getElementById("add-bookmark-button-form")
 const viewCategoryButton = document.getElementById("view-category-button")
 const bookmarkListSection = document.getElementById("bookmark-list-section")
+const closeListBtn = document.getElementById("close-list-button")
+const deleteBookmarkBtn = document.getElementById("delete-bookmark-button")
+const categoryList = document.getElementById("category-list")
+const categoryName = document.querySelectorAll(".category-name");
 
 const categoryInput = document.getElementById("category-dropdown")
 function getBookmarks(){
@@ -23,8 +27,10 @@ function displayOrCloseForm(){
 } 
 
 addBookmarkBtn.addEventListener("click", () => {
-    
     displayOrCloseForm()
+    categoryName[0].innerText = categoryInput.value
+    console.log(categoryInput.value)
+    console.log(categoryName)
 })
 
 closeFormBtn.addEventListener("click",() => {
@@ -44,7 +50,7 @@ addBookmarkBtnForm.addEventListener("click",() => {
     const bookmark = getBookmarks()
     bookmark.push(bookmarkObject)
 
-    localStorage.setItem("bookmark",bookmark)
+    localStorage.setItem("bookmarks",JSON.stringify(bookmark))
 
     nameInput.value = ""
     urlInput.value = ""
@@ -59,16 +65,22 @@ function displayOrHideCategory(){
 
 }
 
-viewCategoryButton.addEventListener("click", () => {
-    const categoryName = document.querySelectorAll(".category-name");
+function displayListCategory() {
     
-    const categoryList = document.getElementById("category-list")
     const bookmark = getBookmarks()
-    if(bookmark.length > 0){
-        let result = ""
-        bookmark.forEach((obj) => {
-            result+= ``
-        });
+    
+    let result = ""
+    bookmark.forEach((obj) => {
+        if(obj.category == categoryInput.value){
+            result+= `<input type="radio" name="" id="${obj.name}" value="${obj.name}">
+            <label for=""><a href="${obj.url}">${obj.name}</a></label>`
+
+
+        }
+    });
+
+    if(result !== ""){
+        categoryList.innerHTML = result
 
     } else {
         console.log("Jalan")
@@ -76,9 +88,38 @@ viewCategoryButton.addEventListener("click", () => {
         No Bookmarks Found
         </p>`
     }
+
+    console.log(categoryList)
     
     categoryName.value = categoryInput;
+}
+
+viewCategoryButton.addEventListener("click", () => {
+    displayListCategory()
     displayOrHideCategory()
+})
+
+closeListBtn.addEventListener("click",() => {
+    displayOrHideCategory()
+})
+
+deleteBookmarkBtn.addEventListener("click",() => {
+    const bookmark = getBookmarks()
+
+    Object.values(categoryList.children).forEach(element => {
+        if(element.checked){
+            bookmark.forEach((obj,index) => {
+                if(obj.name == element.value){
+                    bookmark.splice(index,1)
+                }
+            })
+        }
+    })
+
+    localStorage.setItem("bookmarks",JSON.stringify(bookmark))
+
+    displayListCategory()
+
 })
 
 console.log(getBookmarks())

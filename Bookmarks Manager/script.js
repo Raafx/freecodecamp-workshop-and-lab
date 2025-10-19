@@ -12,10 +12,18 @@ const categoryName = document.querySelectorAll(".category-name");
 
 const categoryInput = document.getElementById("category-dropdown")
 function getBookmarks(){
-    const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) 
-    if(bookmarks){
-        return bookmarks
-    } else {
+    try{
+        const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) 
+        console.log(bookmarks)
+        if(Array.isArray(bookmarks) && bookmarks.every(obj => obj.name && obj.category && obj.url)){
+    
+            return bookmarks
+        
+        } else {
+            return []
+        }
+
+    } catch(error) {
         return []
     }
 }
@@ -68,28 +76,35 @@ function displayOrHideCategory(){
 function displayListCategory() {
     
     const bookmark = getBookmarks()
+    console.log(bookmark)
     
     let result = ""
+    
     bookmark.forEach((obj) => {
         if(obj.category == categoryInput.value){
-            result+= `<input type="radio" name="" id="${obj.name}" value="${obj.name}">
-            <label for=""><a href="${obj.url}">${obj.name}</a></label>`
-
-
+            result+= `
+            <input type="radio" name="${obj.category}" id="${obj.name}" value="${obj.name}">
+            <label for="${obj.name}">
+            <a href="${obj.url}">
+            ${obj.name}
+            </a>
+            </label>
+            `
         }
     });
-
+    categoryList.innerHTML = ""
     if(result !== ""){
-        categoryList.innerHTML = result
+        console.log("jalan")
+        categoryList.innerHTML = `<form action="">${result}</form>`
+        
+        
 
     } else {
         console.log("Jalan")
-        categoryList.innerHTML = `<p>
-        No Bookmarks Found
-        </p>`
+        categoryList.innerHTML = `<p>No Bookmarks Found</p>`
     }
 
-    console.log(categoryList)
+    
     
     categoryName.value = categoryInput;
 }
@@ -105,19 +120,21 @@ closeListBtn.addEventListener("click",() => {
 
 deleteBookmarkBtn.addEventListener("click",() => {
     const bookmark = getBookmarks()
-
-    Object.values(categoryList.children).forEach(element => {
+    const bookmarkElementList = categoryList.children[0].children
+    Object.values(bookmarkElementList).forEach(element => {
         if(element.checked){
             bookmark.forEach((obj,index) => {
-                if(obj.name == element.value){
+                if(obj.name == element.value && obj.category == element.name){
                     bookmark.splice(index,1)
+                    console.log("if jalan")
                 }
             })
         }
     })
-
+    console.log()
+    console.log(bookmark)
     localStorage.setItem("bookmarks",JSON.stringify(bookmark))
-
+    console.log("Jalan lok?")
     displayListCategory()
 
 })

@@ -128,6 +128,11 @@ class ShoppingCart {
 
         const currentProductCountSpan = document.getElementById(`product-count-for-id${product.id}`) 
 
+        console.log(currentProductCountSpan)
+        console.log(product)
+        console.log(product.id)
+        console.log(id)
+
         (currentProductCount > 1)? 
         currentProductCountSpan.textContent = `${currentProductCount}x`
         :
@@ -139,6 +144,40 @@ class ShoppingCart {
             <p>${price}</p>
         </div>`
     }
+
+    getCounts(){
+        return this.items.length
+    }
+
+    calculateTotal(){
+        const subTotal = this.items.reduce((total,item) => total+item.price,0)
+    }
+
+    calculateTaxes(amount){
+        return (amount*(this.taxRate/100)).toFixed(2)
+    }
+    
 } 
 
 const cart = new ShoppingCart()
+
+const addToCartBtns = document.getElementsByClassName("add-to-cart-btn");
+
+[...addToCartBtns].forEach(btn => {
+    btn.addEventListener("click", (event) => {
+        
+        cart.addItem(Number(event.target.id),products)
+        totalNumberOfItems.textContent = cart.getCounts()
+    })
+});
+
+cartBtn.addEventListener("click",() => {
+    isCartShowing = !isCartShowing;
+
+    showHideCartSpan.textContent = isCartShowing ? "Hide":"Show"
+
+    cartContainer.style.display = isCartShowing ? "block":"none"
+});
+
+cart.addItem(10,products)
+cart.calculateTotal()

@@ -126,14 +126,12 @@ class ShoppingCart {
 
         const currentProductCount = totalCountPerProduct[product.id]
 
-        const currentProductCountSpan = document.getElementById(`product-count-for-id${product.id}`) 
+        const currentProductCountSpan = document.getElementById(`product-count-for-id${id}`) 
 
         console.log(currentProductCountSpan)
-        console.log(product)
-        console.log(product.id)
-        console.log(id)
 
-        (currentProductCount > 1)? 
+
+        currentProductCount > 1? 
         currentProductCountSpan.textContent = `${currentProductCount}x`
         :
         productsContainer.innerHTML += `
@@ -151,11 +149,39 @@ class ShoppingCart {
 
     calculateTotal(){
         const subTotal = this.items.reduce((total,item) => total+item.price,0)
+        const tax = this.calculateTaxes(subTotal)
+        this.total = subTotal+tax
+
+        cartSubTotal.textContent = `$${subTotal.toFixed(2)}`
+        cartTaxes.textContent = `$${tax.toFixed(2)}`
+        cartTotal.textContent = `$${this.total.toFixed(2)}`
+
+        return this.total
     }
 
     calculateTaxes(amount){
-        return (amount*(this.taxRate/100)).toFixed(2)
+        return parseFloat(((this.taxRate/100) * amount).toFixed(2))
     }
+
+    clearCart(){
+        if(!this.items.length){
+            alert("Your shopping cart is already empty")
+            return
+        }
+
+        const isCartCleared = confirm("Are you sure you want to clear all items from your shopping cart?")
+
+        if (isCartCleared){
+            this.items = []
+            this.total = 0;
+            productsContainer.innerHTML = "" 
+            totalNumberOfItems.textContent = 0
+            cartSubTotal.textContent = 0
+            cartTaxes.textContent = 0
+            cartTotal.textContent = 0
+        }
+    }
+
     
 } 
 
@@ -167,8 +193,10 @@ const addToCartBtns = document.getElementsByClassName("add-to-cart-btn");
     btn.addEventListener("click", (event) => {
         
         cart.addItem(Number(event.target.id),products)
-        totalNumberOfItems.textContent = cart.getCounts()
+        totalNumberOfItems.textContent = cart.getCounts();
+        cart.calculateTotal();
     })
+
 });
 
 cartBtn.addEventListener("click",() => {
@@ -179,5 +207,4 @@ cartBtn.addEventListener("click",() => {
     cartContainer.style.display = isCartShowing ? "block":"none"
 });
 
-cart.addItem(10,products)
-cart.calculateTotal()
+clearCartBtn.addEventListener("click", cart.clearCart.bind(cart))

@@ -5,42 +5,38 @@ const convertBtn = document.getElementById("convert-btn");
 const result = document.getElementById("result");
 
 const checkUserInput = () => {
-    if(!numberInput.value || isNaN(parseInt(numberInput.value)) || parseInt(numberInput.value) < 0){
+
+    let inputInt = parseInt(numberInput.value)
+    if(!numberInput.value || isNaN(inputInt) || inputInt < 0){
         alert("Please provide a decimal number greater than or equal to 0")
         return
     }
 
-    decimalToBinary(parseInt(numberInput.value))
-    numberInput.value = ""
-}
-
-const decimalToBinary = (input) => {
-    const inputs = []
-    const quotients = []
-    const remainders = []
-
-    if(input === 0){
-        result.innerText = "0"
+    if(inputInt === 5){
+        showAnimation()
         return
     }
 
-    
-    while (input > 0){
-        const remainder = input%2;
-        const quotient = Math.floor(input/2);
-        inputs.push(input)
-        remainders.push(remainder)
-        quotients.push(quotient)
-        input = quotient;
-    }
-    
+    result.textContent = decimalToBinary(inputInt)
+    numberInput.value = ""
+}
 
-    result.innerText = remainders.
-    reverse().
-    join("")
-    console.log("Inputs: ",inputs)
-    console.log("Quotients: ",quotients)
-    console.log("Remainders: ",remainders.join(""))
+const showAnimation = () => {
+    console.log("free")
+    setTimeout(() => console.log("Code"),1000)
+    console.log("Camp")
+}
+
+const decimalToBinary = (input) => {
+    if(input === 0 || input === 1){
+        return String(input)
+    }
+    else {
+        return decimalToBinary(Math.floor(input/2)) + (input%2)
+        
+    }
+
+
 }
 
 convertBtn.addEventListener("click", checkUserInput)
@@ -49,3 +45,5 @@ numberInput.addEventListener("keydown",(e) => {
         checkUserInput()
     }
 })
+
+

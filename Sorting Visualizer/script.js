@@ -6,7 +6,7 @@ const arrayContainer = document.getElementById("array-container")
 let globalArray;
 
 function generateElement(){
-    return Math.floor(Math.random()*100)
+    return Math.floor(Math.random()*100)+1
 }
 
 function generateArray(){
@@ -44,43 +44,24 @@ function fillArrContainer(element,arr){
 } 
 
 function isOrdered(num1,num2){
-    if(num1 > num2){
-        return true
-    } else {
-        return false
-    }
+    return num1 <= num2
 }
 
-function swapElements(arr){
+function swapElements(arr,index){
     
-    arr.forEach((num,index) => {
-        
-        
-        if(isOrdered(arr[index],arr[index+1])){
+        if(!isOrdered(arr[index],arr[index+1])){
             
             [arr[index],arr[index+1]] = [arr[index+1],arr[index]] 
 
-            const container = generateContainer()
-        
-            const arrElement = fillArrContainer(container, globalArray)
-            console.log(arrElement)
-            highlightCurrentEls(arrElement,index)
-            arrayContainer.appendChild(arrElement)
-
-
+            
+            return true
         }
-    })
-
-    return arr
-    
-
-    
 }
 
 function highlightCurrentEls(element,index){
     
-    element.childNodes[index].style.border = "1px solid red"
-    element.childNodes[index+1].style.border = "1px solid red"
+    element.childNodes[index].style.border = "2px dashed red"
+    element.childNodes[index+1].style.border = "2px dashed red"
 }
 
 generateBtn.addEventListener("click", () => {
@@ -98,17 +79,70 @@ generateBtn.addEventListener("click", () => {
     let arrayGenerated = generateArray()
     globalArray = arrayGenerated
     
-    fillArrContainer(startingArray,arrayGenerated)
+    fillArrContainer(startingArray,globalArray)
 })
 
 sortBtn.addEventListener("click", () => {
     
+    for(let i = 0; i < globalArray.length; i++){
+        let isSorted
+
+        for(let x = 0; x < (globalArray.length)-1; x++) {
+            isSorted = isOrdered(globalArray[x],globalArray[x+1])
+            
+            if(!isSorted){
+                break
+            }
+            
+        }
+
+        console.log(isSorted)
+        if(isSorted){
+            globalArray.forEach((num,index) => {
+            if(index < 4){
+                swapElements(globalArray,index)
+                
+                const container = generateContainer()
+                const arrElement = fillArrContainer(container,globalArray)
+                arrayContainer.appendChild(arrElement)
     
-    globalArray.forEach(() => {
-        swapElements(globalArray)
+            }
+ 
+        })
+            break
+        }
+        globalArray.forEach((num,index) => {
+            if(index < 4){
+                swapElements(globalArray,index)
+                
+                const container = generateContainer()
+                const arrElement = fillArrContainer(container,globalArray)
+                arrayContainer.appendChild(arrElement)
+    
+            }
+ 
+        })
         
         
+    }
+
+    // arrayContainer.children.forEach((element,index) => {
+    //     highlightCurrentEls(element,index)
+    // })
+
+    let index = 0
+    Object.values(arrayContainer.children).forEach((element) => {
+
+        highlightCurrentEls(element,index)
+        if(element.childNodes[index+2] !== undefined){
+            
+            index++
+        } else {
+            index = 0
+        }
     })
 
 })
+
+
 

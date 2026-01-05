@@ -15,38 +15,41 @@ const allCategories = {
 };
 
 const avatarElement = document.getElementById("avatars")
+const postContainer = document.getElementById("posts-container")
 
 
-async function fetchForumLatest(){
+async function fetchData(){
     try {
 
         const res = await fetch(forumLatest)
         const result = await res.json()
-        return result
+        showLatestPosts(result)   
+        
     } catch (error) {
-        console.error("Error:", error)
+        console.log("Error:", error)
     }
 
 }
 
+fetchData()
 
-
-fetchForumLatest()
-.then(result => {
-    // result.topic_list.topics.forEach(element => {
-        
-    //     avatars(element.posters,result.users)        
-    // });
-
-    const posters = result.topic_list.topics[0].posters
-    console.log(avatars(posters,result.users))
-    avatarElement.innerHTML = avatars(posters,result.users)
-
-    
-})
 
 const timeAgo = (timeStamp) => {
+    const timeNow = new Date()
+  
+ 
+
+    const timeDifference = timeNow-new Date(timeStamp)
     
+    if(timeDifference < 3600000){
+        return `${Math.floor(timeDifference/60000)}m Ago`
+    }
+    else if(timeDifference < 86400000){
+        return `${Math.floor(timeDifference/3600000)}h Ago`
+    } else {
+        return `${Math.floor(timeDifference/86400000)}d Ago`
+    }
+
 }
 
 const viewCount = (numView) => {
@@ -58,13 +61,13 @@ const viewCount = (numView) => {
 }
 
 const forumCategory = (idCategory) => {
-    const categoryObj = forumCategory[idCategory]
+    const categoryObj = allCategories[idCategory]
     const categoryName = categoryObj? categoryObj["category"]:"General"
     const categoryClass = categoryObj? categoryObj["className"]:"general"
 
 
 
-    return `<a class="${categoryName} ${categoryClass}" href="${forumCategoryUrl}${categoryClass}${idCategory}">${categoryName}</a>`
+    return `<a class="category ${categoryClass}" href="${forumCategoryUrl}${categoryClass}/${idCategory}">${categoryName}</a>`
 }
 
 const avatars = (postersArr,usersArr) => {
@@ -83,3 +86,47 @@ const avatars = (postersArr,usersArr) => {
     })
     return imgResult
 }
+
+const showLatestPosts = (obj) => {
+    const usersArray = obj.users
+    const topicListObj = obj.topic_list
+    const topicsArray = topicListObj.topics
+    let result = ""
+    topicsArray.forEach((topic) => {
+
+        const slug = topic.slug;
+        const id = topic.id;
+        const title = topic.title;
+        const categoryId = topic.category_id;
+        const posters = topic.posters;
+        const replies = topic.posts_count - 1;
+        const numberView = topic.views;
+        const timeStamp = topic.last_posted_at;
+        
+        
+        
+        result+=`<tr>
+            <td>
+                <a class="post-title" href="${forumTopicUrl}${slug}/${id}">${title}</a><br>
+                ${forumCategory(categoryId)}
+            </td>
+            <td>
+                <div class="avatar-container">
+                    ${avatars(posters,usersArray)}
+                </div>
+            </td>
+            <td>
+                ${replies}
+            </td>
+            <td>
+                ${viewCount(numberView)}
+            </td>
+            <td>
+                ${timeAgo(timeStamp)}
+            </td>
+        </tr>`
+    })
+    postContainer.innerHTML = result
+    
+}
+

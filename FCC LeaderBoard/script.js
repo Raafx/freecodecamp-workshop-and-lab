@@ -26,7 +26,7 @@ async function fetchData(){
         showLatestPosts(result)   
         
     } catch (error) {
-        console.log("Error:", error)
+        console.log(error)
     }
 
 }
@@ -36,18 +36,20 @@ fetchData()
 
 const timeAgo = (timeStamp) => {
     const timeNow = new Date()
-  
- 
+    const timePassed = new Date(timeStamp) 
+    const minutes = Math.floor((timeNow-timePassed)/60000)
+    const hours = Math.floor((timeNow-timePassed)/3600000)
+    const day = Math.floor((timeNow-timePassed)/86400000)
 
-    const timeDifference = timeNow-new Date(timeStamp)
     
-    if(timeDifference < 3600000){
-        return `${Math.floor(timeDifference/60000)}m Ago`
+ 
+    if(minutes < 60){
+        return `${minutes}m ago`
     }
-    else if(timeDifference < 86400000){
-        return `${Math.floor(timeDifference/3600000)}h Ago`
+    else if(hours < 24){
+        return `${hours}h ago`
     } else {
-        return `${Math.floor(timeDifference/86400000)}d Ago`
+        return `${day}d ago`
     }
 
 }
@@ -101,7 +103,7 @@ const showLatestPosts = (obj) => {
         const posters = topic.posters;
         const replies = topic.posts_count - 1;
         const numberView = topic.views;
-        const timeStamp = topic.last_posted_at;
+        const timeStamp = topic.bumped_at;
         
         
         
@@ -115,16 +117,11 @@ const showLatestPosts = (obj) => {
                     ${avatars(posters,usersArray)}
                 </div>
             </td>
-            <td>
-                ${replies}
-            </td>
-            <td>
-                ${viewCount(numberView)}
-            </td>
-            <td>
-                ${timeAgo(timeStamp)}
-            </td>
-        </tr>`
+            <td>${replies}</td>
+            <td>${viewCount(numberView)}</td>
+            <td>${timeAgo(timeStamp)}</td>
+        </tr>
+        `
     })
     postContainer.innerHTML = result
     
